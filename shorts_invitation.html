@@ -3,195 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>쇼츠 자동화 프로그램 - 특별 초대</title>
+    <title>AI 쇼츠 자동 생성 프로그램 - 특별 초대</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #2c3e50; /* Deep Blue/Gray */
+            --secondary-color: #34495e; /* Slightly lighter blue/gray */
+            --accent-color: #a0522d; /* Sienna for a richer feel */
+            --text-color: #333;
+            --light-text-color: #ecf0f1;
+            --bg-gradient-start: #f4f7f6;
+            --bg-gradient-end: #e0e5e9;
+            --card-bg: #ffffff;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+            --shadow-medium: rgba(0, 0, 0, 0.15);
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Open Sans', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #f0f8ff 0%, #e6e6fa 100%);
-            color: #333;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            color: var(--text-color);
             overflow: hidden; /* Prevent scrollbar during transitions */
             text-align: center;
+            perspective: 1000px; /* For 3D effects */
         }
 
-        #invitation-screen, #program-details-screen {
-            background-color: #fff;
+        .screen {
+            background-color: var(--card-bg);
             padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-medium);
+            max-width: 650px;
             width: 90%;
-            text-align: center;
             box-sizing: border-box;
-            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+            transition: all 0.8s ease-in-out;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            backface-visibility: hidden; /* Prevent flickering */
         }
 
-        /* Initial invitation styling */
         #invitation-screen {
+            z-index: 2;
             opacity: 1;
-            transform: scale(1);
+            transform: translate(-50%, -50%) rotateY(0deg);
         }
 
-        #closed-invitation-card {
+        #program-details-screen {
+            z-index: 1;
+            opacity: 0;
+            transform: translate(-50%, -50%) rotateY(90deg);
+            visibility: hidden;
+        }
+
+        /* New class for active details screen */
+        #program-details-screen.active {
+            z-index: 3; /* Bring to front */
+            opacity: 1;
+            transform: translate(-50%, -50%) rotateY(0deg);
+            visibility: visible;
+        }
+
+        .closed-card {
             cursor: pointer;
-            width: 250px;
-            height: 180px;
-            margin: 0 auto 20px;
-            background: #a9d4e9; /* Placeholder for invitation image */
-            border-radius: 10px;
+            width: 280px;
+            height: 200px;
+            margin: 0 auto 25px;
+            background: linear-gradient(145deg, #d4af37, #b8860b); /* Gold/Bronze gradient */
+            border-radius: 15px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #fff;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #ffffff; /* White text for contrast */
+            box-shadow: 0 8px 20px var(--shadow-light);
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
+            border: 1px solid #c0a040;
         }
 
-        #closed-invitation-card::before {
-            content: '✉️'; /* Envelope emoji for visual cue */
-            font-size: 3em;
-            margin-bottom: 10px;
+        .closed-card::before {
+            content: '✉️';
+            font-size: 3.5em;
+            margin-bottom: 15px;
             display: block;
+            color: #ffffff; /* White envelope icon */
         }
 
-        #closed-invitation-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-        }
-
-        #invitation-screen p {
-            font-size: 1.2em;
-            color: #666;
-            margin-top: 10px;
-        }
-
-        /* Program details styling */
-        #program-details-screen {
-            opacity: 0;
-            transform: scale(0.9);
-            position: absolute; /* To allow smooth transition */
-            visibility: hidden; /* Hide completely when not active */
+        .closed-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 12px 25px var(--shadow-medium);
         }
 
         h1 {
-            color: #4CAF50;
-            font-size: 2.8em;
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            font-size: 2.5em;
             margin-bottom: 20px;
-            opacity: 0; /* For welcome animation */
-            transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            line-height: 1.2;
         }
 
         h2 {
-            color: #2196F3;
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary-color);
             font-size: 1.8em;
             margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 1.05em;
             margin-bottom: 15px;
         }
 
         .program-intro ul {
             list-style: none;
             padding: 0;
-            margin: 20px 0;
+            margin: 25px 0;
             text-align: left;
         }
 
         .program-intro li {
-            background-color: #e8f5e9;
+            background-color: #f8f9fa;
             margin-bottom: 10px;
-            padding: 12px 15px;
+            padding: 15px 20px;
             border-radius: 8px;
-            font-size: 1.1em;
-            color: #4CAF50;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s ease;
+            font-size: 1.0em;
+            color: var(--text-color);
+            box-shadow: 0 2px 8px var(--shadow-light);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-left: 4px solid var(--accent-color);
         }
 
         .program-intro li:hover {
             transform: translateX(5px);
+            box-shadow: 0 4px 10px var(--shadow-medium);
         }
 
         .download-button {
             display: inline-block;
-            background-color: #2196F3;
-            color: white;
-            padding: 15px 30px;
-            border-radius: 8px;
+            background: linear-gradient(45deg, var(--accent-color) 0%, #cd853f 100%); /* Sienna gradient */
+            color: var(--light-text-color);
+            padding: 15px 35px;
+            border-radius: 30px;
             text-decoration: none;
-            font-size: 1.3em;
+            font-size: 1.4em;
             font-weight: bold;
-            margin-top: 30px;
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 40px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px var(--shadow-medium);
+            letter-spacing: 0.5px;
+            border: none;
         }
 
         .download-button:hover {
-            background-color: #1976D2;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            background: linear-gradient(45deg, #cd853f 0%, var(--accent-color) 100%);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 25px var(--shadow-medium);
         }
 
-        /* Animations for reveal */
-        .show-details {
-            opacity: 1 !important;
-            transform: scale(1) !important;
-            visibility: visible !important;
+        .license-info {
+            margin-top: 30px;
+            font-size: 0.95em;
+            color: #666;
         }
 
-        .show-welcome {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
+        .footer {
+            margin-top: 40px;
+            font-size: 0.85em;
+            color: #999;
+            border-top: 1px solid #eee;
+            padding-top: 25px;
+            text-align: center;
         }
 
-        .show-program-info {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-            visibility: visible !important;
+        /* Animation classes */
+        .fade-out-rotate-y {
+            opacity: 0;
+            transform: translate(-50%, -50%) rotateY(-90deg);
+        }
+
+        .fade-in-rotate-y {
+            opacity: 1;
+            transform: translate(-50%, -50%) rotateY(0deg);
+            visibility: visible;
+        }
+
+        .slide-in-up {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hidden {
+            visibility: hidden;
+            opacity: 0;
         }
     </style>
 </head>
 <body>
-    <!-- 초대장 화면 -->
-    <div id="invitation-screen">
-        <div id="closed-invitation-card">
+    <!-- Invitation Screen -->
+    <div id="invitation-screen" class="screen">
+        <div class="closed-card" id="closed-invitation-card">
             <p>초대장을 클릭하여 여세요!</p>
-            <!--
-                실제 초대장 이미지를 사용하려면 위 <p> 태그 대신 <img> 태그를 사용하세요.
-                예: <img src="your_closed_invitation_image.png" alt="닫힌 초대장">
-            -->
         </div>
-        <p>쇼츠 자동화 프로그램 특별 초대</p>
+        <p style="font-size: 1.3em; color: var(--primary-color); font-weight: 600;">AI 쇼츠 자동 생성 프로그램 특별 초대</p>
     </div>
 
-    <!-- 프로그램 상세 정보 화면 (처음에는 숨겨져 있음) -->
-    <div id="program-details-screen">
-        <h1 id="welcome-heading"></h1> <!-- 환영합니다! 멘트가 여기에 나타납니다. -->
+    <!-- Program Details Screen (initially hidden) -->
+    <div id="program-details-screen" class="screen hidden">
+        <h1 id="welcome-heading" class="hidden">환영합니다!</h1>
 
-        <div id="program-info" style="opacity: 0; transform: translateY(20px); visibility: hidden;">
-            <h2>✨ 쇼츠 자동화 프로그램 소개 ✨</h2>
+        <div id="program-info" class="hidden">
+            <h2>✨ AI 쇼츠 자동 생성 프로그램 소개 ✨</h2>
             <ul>
-                <li>프로그램 소개1: 클릭 몇 번으로 쇼츠 영상 제작을 자동화합니다.</li>
-                <li>프로그램 소개2: AI 기반 스크립트 생성 및 음성 변환 기능을 제공합니다.</li>
-                <li>프로그램 소개3: 다양한 템플릿과 효과로 손쉽게 고품질 영상을 만듭니다.</li>
-                <li>프로그램 소개4: 유튜브, 틱톡 등 다양한 플랫폼에 최적화된 형식으로 내보내기 가능합니다.</li>
-                <li>프로그램 소개5: 초보자도 쉽게 사용할 수 있는 직관적인 인터페이스를 자랑합니다.</li>
+                <li>클릭 몇 번으로 쇼츠 영상 제작을 자동화하여 시간을 절약하세요.</li>
+                <li>AI 기반 스크립트 생성 및 자연스러운 음성 변환 기능을 제공합니다.</li>
+                <li>다양한 고품질 템플릿과 전문적인 효과로 손쉽게 영상을 만드세요.</li>
+                <li>유튜브, 틱톡 등 주요 플랫폼에 최적화된 형식으로 영상을 내보낼 수 있습니다.</li>
+                <li>초보자도 쉽게 사용할 수 있는 직관적인 인터페이스를 자랑합니다.</li>
             </ul>
             <a href="YOUR_PROGRAM_DOWNLOAD_LINK.zip" download class="download-button">
                 🚀 프로그램 다운로드 하기
-                <!-- 실제 프로그램 다운로드 링크로 'YOUR_PROGRAM_DOWNLOAD_LINK.zip'을 변경해주세요. -->
             </a>
-            <p style="margin-top: 20px; font-size: 0.9em; color: #888;">
+            <p class="license-info">
                 다운로드 시 라이센스 키는 이메일로 별도 발송됩니다.
             </p>
+        </div>
+
+        <div class="footer">
+            <p>본 메일은 발신 전용입니다. 문의사항은 고객센터를 이용해 주시기 바랍니다.</p>
+            <p>&copy; 2025 AI 쇼츠 자동 생성 프로그램. All rights reserved.</p>
         </div>
     </div>
 
@@ -204,26 +254,27 @@
             const programInfo = document.getElementById('program-info');
 
             closedInvitationCard.addEventListener('click', () => {
-                // 초대장 화면 숨기기
-                invitationScreen.style.opacity = '0';
-                invitationScreen.style.transform = 'scale(0.9)';
+                // Start fading out and rotating the invitation screen
+                invitationScreen.classList.add('fade-out-rotate-y');
 
-                // 일정 시간 후 프로그램 상세 화면 보여주기
+                // After the invitation screen starts its transition, make the details screen active
                 setTimeout(() => {
-                    invitationScreen.style.display = 'none'; // 완전히 숨김
-                    programDetailsScreen.classList.add('show-details'); // 상세 화면 표시
+                    invitationScreen.style.display = 'none'; // Completely remove from layout
+                    programDetailsScreen.classList.add('active'); // Apply active state for visibility and z-index
 
-                    // "환영합니다!" 멘트 연출
+                    // Welcome heading animation
                     setTimeout(() => {
-                        welcomeHeading.textContent = '환영합니다!';
-                        welcomeHeading.classList.add('show-welcome');
-                    }, 500); // 0.5초 후 환영 멘트 나타남
+                        welcomeHeading.classList.remove('hidden');
+                        welcomeHeading.classList.add('slide-in-up');
+                    }, 500); // 0.5s after details screen appears
 
-                    // 프로그램 소개 및 다운로드 링크 연출
+                    // Program info animation
                     setTimeout(() => {
-                        programInfo.classList.add('show-program-info');
-                    }, 1500); // 환영 멘트 후 1.5초 후 프로그램 정보 나타남
-                }, 800); // 초대장 화면이 사라지는 시간 (CSS transition 시간과 일치)
+                        programInfo.classList.remove('hidden');
+                        programInfo.classList.add('slide-in-up');
+                    }, 1200); // 1.2s after details screen appears
+
+                }, 800); // Matches invitationScreen transition duration
             });
         });
     </script>
