@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>쇼츠 자동화 프로그램 - 특별 초대</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6e6fa 100%);
+            color: #333;
+            overflow: hidden; /* Prevent scrollbar during transitions */
+            text-align: center;
+        }
+
+        #invitation-screen, #program-details-screen {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            box-sizing: border-box;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+        }
+
+        /* Initial invitation styling */
+        #invitation-screen {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        #closed-invitation-card {
+            cursor: pointer;
+            width: 250px;
+            height: 180px;
+            margin: 0 auto 20px;
+            background: #a9d4e9; /* Placeholder for invitation image */
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        #closed-invitation-card::before {
+            content: '✉️'; /* Envelope emoji for visual cue */
+            font-size: 3em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        #closed-invitation-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        #invitation-screen p {
+            font-size: 1.2em;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        /* Program details styling */
+        #program-details-screen {
+            opacity: 0;
+            transform: scale(0.9);
+            position: absolute; /* To allow smooth transition */
+            visibility: hidden; /* Hide completely when not active */
+        }
+
+        h1 {
+            color: #4CAF50;
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            opacity: 0; /* For welcome animation */
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        h2 {
+            color: #2196F3;
+            font-size: 1.8em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .program-intro ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .program-intro li {
+            background-color: #e8f5e9;
+            margin-bottom: 10px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            color: #4CAF50;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .program-intro li:hover {
+            transform: translateX(5px);
+        }
+
+        .download-button {
+            display: inline-block;
+            background-color: #2196F3;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 30px;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .download-button:hover {
+            background-color: #1976D2;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Animations for reveal */
+        .show-details {
+            opacity: 1 !important;
+            transform: scale(1) !important;
+            visibility: visible !important;
+        }
+
+        .show-welcome {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        .show-program-info {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+            visibility: visible !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- 초대장 화면 -->
+    <div id="invitation-screen">
+        <div id="closed-invitation-card">
+            <p>초대장을 클릭하여 여세요!</p>
+            <!--
+                실제 초대장 이미지를 사용하려면 위 <p> 태그 대신 <img> 태그를 사용하세요.
+                예: <img src="your_closed_invitation_image.png" alt="닫힌 초대장">
+            -->
+        </div>
+        <p>쇼츠 자동화 프로그램 특별 초대</p>
+    </div>
+
+    <!-- 프로그램 상세 정보 화면 (처음에는 숨겨져 있음) -->
+    <div id="program-details-screen">
+        <h1 id="welcome-heading"></h1> <!-- 환영합니다! 멘트가 여기에 나타납니다. -->
+
+        <div id="program-info" style="opacity: 0; transform: translateY(20px); visibility: hidden;">
+            <h2>✨ 쇼츠 자동화 프로그램 소개 ✨</h2>
+            <ul>
+                <li>프로그램 소개1: 클릭 몇 번으로 쇼츠 영상 제작을 자동화합니다.</li>
+                <li>프로그램 소개2: AI 기반 스크립트 생성 및 음성 변환 기능을 제공합니다.</li>
+                <li>프로그램 소개3: 다양한 템플릿과 효과로 손쉽게 고품질 영상을 만듭니다.</li>
+                <li>프로그램 소개4: 유튜브, 틱톡 등 다양한 플랫폼에 최적화된 형식으로 내보내기 가능합니다.</li>
+                <li>프로그램 소개5: 초보자도 쉽게 사용할 수 있는 직관적인 인터페이스를 자랑합니다.</li>
+            </ul>
+            <a href="YOUR_PROGRAM_DOWNLOAD_LINK.zip" download class="download-button">
+                🚀 프로그램 다운로드 하기
+                <!-- 실제 프로그램 다운로드 링크로 'YOUR_PROGRAM_DOWNLOAD_LINK.zip'을 변경해주세요. -->
+            </a>
+            <p style="margin-top: 20px; font-size: 0.9em; color: #888;">
+                다운로드 시 라이센스 키는 이메일로 별도 발송됩니다.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const invitationScreen = document.getElementById('invitation-screen');
+            const closedInvitationCard = document.getElementById('closed-invitation-card');
+            const programDetailsScreen = document.getElementById('program-details-screen');
+            const welcomeHeading = document.getElementById('welcome-heading');
+            const programInfo = document.getElementById('program-info');
+
+            closedInvitationCard.addEventListener('click', () => {
+                // 초대장 화면 숨기기
+                invitationScreen.style.opacity = '0';
+                invitationScreen.style.transform = 'scale(0.9)';
+
+                // 일정 시간 후 프로그램 상세 화면 보여주기
+                setTimeout(() => {
+                    invitationScreen.style.display = 'none'; // 완전히 숨김
+                    programDetailsScreen.classList.add('show-details'); // 상세 화면 표시
+
+                    // "환영합니다!" 멘트 연출
+                    setTimeout(() => {
+                        welcomeHeading.textContent = '환영합니다!';
+                        welcomeHeading.classList.add('show-welcome');
+                    }, 500); // 0.5초 후 환영 멘트 나타남
+
+                    // 프로그램 소개 및 다운로드 링크 연출
+                    setTimeout(() => {
+                        programInfo.classList.add('show-program-info');
+                    }, 1500); // 환영 멘트 후 1.5초 후 프로그램 정보 나타남
+                }, 800); // 초대장 화면이 사라지는 시간 (CSS transition 시간과 일치)
+            });
+        });
+    </script>
+</body>
+</html>
