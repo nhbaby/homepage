@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase 이미지 업로더 (Storage & Firestore)</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        /* 커스텀 스타일 */
+        .container-card {
+            background-color: #1e293b; /* Slate-800 */
+            border: 1px solid #334155; /* Slate-700 */
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
+
+    <div class="max-w-xl w-full container-card p-8 rounded-xl shadow-2xl">
+        <h1 class="text-3xl font-bold mb-6 text-center text-cyan-400">Firebase 이미지 업로더</h1>
+        <p id="user-info" class="text-sm text-gray-400 text-center mb-6">사용자 인증 중...</p>
+
+        <!-- 파일 업로드 섹션 -->
+        <div id="upload-section" class="space-y-4">
+            <input type="file" id="image-file" accept="image/*" class="w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-full file:border-0
+                file:text-sm file:font-semibold
+                file:bg-cyan-50 file:text-cyan-700
+                hover:file:bg-cyan-100
+                focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            />
+            <button onclick="handleFileUpload()" id="upload-button" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50">
+                이미지 업로드 및 URL 저장
+            </button>
+            <div id="progress-bar" class="h-2 bg-gray-700 rounded-full overflow-hidden hidden">
+                <div id="progress-fill" class="h-2 bg-cyan-500 transition-all duration-300" style="width: 0%;"></div>
+            </div>
+            <p id="message" class="text-sm text-gray-400 min-h-[1.5rem]"></p>
+        </div>
+
+        <div class="border-t border-gray-700 my-8"></div>
+
+        <!-- 최신 업로드 이미지 및 URL 표시 섹션 -->
+        <h2 class="text-xl font-semibold mb-4 text-cyan-400">최근 업로드된 이미지</h2>
+        <div id="latest-image-display" class="bg-gray-800 p-4 rounded-lg space-y-4">
+            <div id="image-preview" class="w-full h-48 bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 overflow-hidden">
+                최근 업로드된 이미지가 여기에 표시됩니다.
+            </div>
+            <p id="image-url-text" class="text-sm break-all text-gray-400"></p>
+            <button onclick="copyToClipboard('image-url-text')" id="copy-button" class="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 py-1 px-3 rounded-full hidden">URL 복사</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Imports -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firestore 로깅 설정 (디버깅용)
+        setLogLevel('Debug');
+
+        // -----------------------------------------------------------
+        // 1. Firebase 설정 및 초기화
+        // -----------------------------------------------------------
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // __firebase_config를 안전하게 파싱합니다.
+        const firebaseConfigString = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
+        let firebaseConfig = {};
+
+        try {
+            firebaseConfig = JSON.parse(firebaseConfigString);
+        } catch (e) {
+            console.error("Firebase 설정 파싱 오류:", e);
+        }
+
+        let app;
+        let db;
+        let auth;
+        let storage;
+        let userId = null;
+        let firebaseReady = false; // Firebase 초기화 성공 여부 플래그
+
+        if (firebaseConfig.projectId) {
+            // projectId가 있어야만 초기화 진행
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            storage = getStorage(app);
+            firebaseReady = true;
+        } else {
+            // projectId가 없으면 오류 메시지 출력 및 업로드 버튼 비활성화
+            console.error("Firebase Configuration Error: Project ID is missing.");
+            document.getElementById('user-info').textContent = "❗ Firebase 오류: 설정(projectId)이 누락되어 서비스를 사용할 수 없습니다.";
+            document.getElementById('upload-button').disabled = true;
+        }
+
+
+        const uiUserInfo = document.getElementById('user-info');
+        const uiMessage = document.getElementById('message');
+        const uiProgressBar = document.getElementById('progress-bar');
+        const uiProgressFill = document.getElementById('progress-fill');
+        const uiImagePreview = document.getElementById('image-preview');
+        const uiImageUrlText = document.getElementById('image-url-text');
+        const uiCopyButton = document.getElementById('copy-button');
+        const uiUploadButton = document.getElementById('upload-button');
+        const uiImageFile = document.getElementById('image-file');
+
+        if (firebaseReady) {
+            /**
+             * Firebase 인증 상태 변경 리스너 및 초기 인증 처리
+             */
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    userId = user.uid;
+                    uiUserInfo.textContent = `인증됨. 사용자 ID: ${userId.substring(0, 8)}... (전체 ID: ${userId})`;
+                    startRealtimeListener(userId);
+                } else {
+                    try {
+                        // Custom Token이 있다면 사용, 없으면 익명 로그인
+                        if (typeof __initial_auth_token !== 'undefined') {
+                            await signInWithCustomToken(auth, __initial_auth_token);
+                        } else {
+                            // Custom Token이 없거나 실패하면 익명 로그인 시도
+                            await signInAnonymously(auth);
+                        }
+                        // 성공적으로 로그인 후 다시 onAuthStateChanged가 호출되면서 user가 설정됨
+                    } catch (error) {
+                        // 익명 로그인까지 실패하면 에러 메시지 출력
+                        uiUserInfo.textContent = `인증 실패: ${error.message}`;
+                        console.error("인증 실패:", error);
+                    }
+                }
+            });
+        }
+
+
+        // -----------------------------------------------------------
+        // 2. Storage 업로드 로직
+        // -----------------------------------------------------------
+
+        /**
+         * 파일을 Firebase Storage에 업로드하고 다운로드 URL을 얻습니다.
+         * @param {File} file 업로드할 File 객체
+         * @param {string} userId 현재 사용자 ID
+         * @returns {Promise<string>} 다운로드 URL
+         */
+        async function uploadFileToStorage(file, userId) {
+            // 파일 경로: images/{userId}/{timestamp}_{fileName}
+            const storagePath = `images/${userId}/${Date.now()}_${file.name}`;
+            const storageRef = ref(storage, storagePath);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            return new Promise((resolve, reject) => {
+                uiProgressBar.classList.remove('hidden');
+
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        // 업로드 진행률 업데이트
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        uiProgressFill.style.width = progress + '%';
+                        uiMessage.textContent = `업로드 중... ${Math.round(progress)}%`;
+
+                        if (progress === 100) {
+                             uiMessage.textContent = '업로드 완료. URL 가져오는 중...';
+                        }
+                    },
+                    (error) => {
+                        // 오류 처리
+                        uiProgressBar.classList.add('hidden');
+                        uiMessage.textContent = `업로드 실패: ${error.message}`;
+                        reject(error);
+                    },
+                    async () => {
+                        // 업로드 완료 후 다운로드 URL 가져오기
+                        try {
+                            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                            uiProgressBar.classList.add('hidden');
+                            uiProgressFill.style.width = '0%';
+                            resolve(downloadURL);
+                        } catch (error) {
+                            uiProgressBar.classList.add('hidden');
+                            uiMessage.textContent = `URL 가져오기 실패: ${error.message}`;
+                            reject(error);
+                        }
+                    }
+                );
+            });
+        }
+
+        // -----------------------------------------------------------
+        // 3. Firestore 저장 로직
+        // -----------------------------------------------------------
+
+        /**
+         * Firestore에 이미지 URL 및 메타데이터를 저장합니다.
+         * @param {string} url Storage에서 받은 공개 다운로드 URL
+         */
+        async function saveImageUrlToFirestore(url) {
+            if (!userId) {
+                uiMessage.textContent = "사용자 인증이 완료되지 않았습니다. 잠시 후 다시 시도하세요.";
+                return;
+            }
+
+            // Private 컬렉션 경로 사용 (다른 사용자와 공유하려면 public/data/ 컬렉션 사용)
+            const collectionPath = `artifacts/${appId}/users/${userId}/uploaded_images`;
+            const docRef = doc(db, collectionPath, crypto.randomUUID()); // 고유 ID로 새 문서 생성
+
+            try {
+                await setDoc(docRef, {
+                    url: url,
+                    uploadedAt: serverTimestamp(),
+                    userId: userId,
+                    fileName: uiImageFile.files[0].name
+                });
+                uiMessage.textContent = "이미지 URL이 Firestore에 성공적으로 저장되었습니다.";
+            } catch (error) {
+                uiMessage.textContent = `Firestore 저장 실패: ${error.message}`;
+                console.error("Firestore 저장 실패:", error);
+            }
+        }
+
+        // -----------------------------------------------------------
+        // 4. 메인 처리 함수
+        // -----------------------------------------------------------
+
+        /**
+         * 파일 업로드 버튼 클릭 시 실행되는 메인 함수
+         */
+        window.handleFileUpload = async function() {
+            if (!firebaseReady) {
+                 uiMessage.textContent = "Firebase 초기화 오류로 업로드를 시작할 수 없습니다.";
+                 return;
+            }
+
+            if (!userId) {
+                 uiMessage.textContent = "사용자 인증이 완료되지 않았습니다. (Firebase User ID 필요)";
+                 return;
+            }
+
+            const file = uiImageFile.files[0];
+
+            if (!file) {
+                uiMessage.textContent = "업로드할 이미지를 선택해 주세요.";
+                return;
+            }
+
+            uiUploadButton.disabled = true;
+            uiMessage.textContent = "업로드 시작...";
+
+            try {
+                // 1. Storage에 파일 업로드 및 URL 획득
+                const downloadURL = await uploadFileToStorage(file, userId);
+
+                // 2. 획득한 URL을 Firestore에 저장
+                await saveImageUrlToFirestore(downloadURL);
+
+            } catch (error) {
+                // 이미 에러 메시지는 progress-bar 로직에서 처리되었으므로 추가 로그만 남김
+                console.error("전체 업로드 프로세스 실패:", error);
+                uiMessage.textContent = `업로드 실패. 콘솔에서 자세한 오류 확인 (Storage 또는 Firestore 권한 문제일 수 있음).`;
+            } finally {
+                uiUploadButton.disabled = false;
+            }
+        };
+
+        // -----------------------------------------------------------
+        // 5. 실시간 리스너 (가장 최근 이미지 표시)
+        // -----------------------------------------------------------
+
+        /**
+         * Firestore에 저장된 최신 이미지 URL을 실시간으로 가져와 화면에 표시합니다.
+         * @param {string} currentUserId 현재 사용자 ID
+         */
+        function startRealtimeListener(currentUserId) {
+            const collectionPath = `artifacts/${appId}/users/${currentUserId}/uploaded_images`;
+            const q = query(
+                collection(db, collectionPath),
+            );
+
+            // 실시간 리스너 설정
+            onSnapshot(q, (snapshot) => {
+                let latestImage = null;
+                const images = [];
+                snapshot.forEach(doc => {
+                    images.push(doc.data());
+                });
+
+                // **주의**: Firestore에서 orderBy를 사용하려면 인덱스가 필요하며, 없을 경우 오류가 발생합니다.
+                // 따라서, 데이터 양이 적은 경우에 한해 JavaScript 메모리에서 정렬하는 것을 권장합니다.
+                images.sort((a, b) => (b.uploadedAt?.seconds || 0) - (a.uploadedAt?.seconds || 0));
+                latestImage = images[0];
+
+                if (latestImage) {
+                    // 이미지 미리보기 업데이트
+                    uiImagePreview.innerHTML = `<img src="${latestImage.url}" alt="업로드된 이미지" class="w-full h-full object-cover">`;
+
+                    // URL 텍스트 업데이트
+                    uiImageUrlText.textContent = latestImage.url;
+                    uiCopyButton.classList.remove('hidden');
+                } else {
+                    uiImagePreview.innerHTML = '최근 업로드된 이미지가 여기에 표시됩니다.';
+                    uiImageUrlText.textContent = '업로드된 이미지가 없습니다.';
+                    uiCopyButton.classList.add('hidden');
+                }
+            }, (error) => {
+                console.error("Firestore 실시간 리스너 오류:", error);
+                uiMessage.textContent = `데이터 로드 오류: ${error.message}`;
+            });
+        }
+
+
+        // -----------------------------------------------------------
+        // 6. 유틸리티 함수
+        // -----------------------------------------------------------
+
+        /**
+         * URL 텍스트를 클립보드에 복사합니다.
+         */
+        window.copyToClipboard = function(elementId) {
+            const element = document.getElementById(elementId);
+            const textToCopy = element.textContent;
+
+            const tempInput = document.createElement('textarea');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+
+            try {
+                document.execCommand('copy');
+                uiMessage.textContent = 'URL이 클립보드에 복사되었습니다!';
+                setTimeout(() => uiMessage.textContent = '', 2000);
+            } catch (err) {
+                console.error('복사 실패:', err);
+                uiMessage.textContent = 'URL 복사에 실패했습니다.';
+            } finally {
+                document.body.removeChild(tempInput);
+            }
+        };
+
+    </script>
+</body>
+</html>

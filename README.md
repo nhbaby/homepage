@@ -21,3 +21,5 @@ https://nhbaby.github.io/homepage/shorts_invitation.html
 - 질문 : 프로젝트 선택, public 선택, single-page no, github no
 - public 폴더로 이동
 - 배포 : firebase deploy --only hosting
+
+url : https://vidfactoryai-29bfe.web.app/

@@ -3,7 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 쇼츠 팩토리 (VidFactory AI) - 2시간 편집을 5분으로</title>
+    <title>AI 쇼츠 팩토리 | VidFactory AI - 2시간 편집을 5분으로 단축하는 수익형 쇼츠 자동 제작 솔루션</title>
+
+    <!-- Favicon Link Added -->
+    <link rel="icon" href="./static/img/favicon.ico" type="image/x-icon">
+
+    <!-- 🌟 Google SEO 최적화를 위한 메타 태그 추가 🌟 -->
+    <meta name="description" content="2시간 걸리던 쇼츠 편집을 단 5분 만에 AI가 자동 완성합니다. 대본, 더빙, 썸네일 제작까지 한번에 처리하여 당신의 수익 활동에만 집중할 수 있게 돕는 혁신적인 AI 동영상 제작 프로그램입니다.">
+    <meta name="keywords" content="AI 쇼츠 제작, AI 동영상 편집, 쇼츠 자동 생성, 수익형 쇼츠, 릴스 제작, 유튜브 쇼츠, VidFactory AI">
+
+    <!-- Open Graph (OG) 태그: 소셜 미디어(카카오톡, 페이스북 등) 공유 최적화 -->
+    <meta property="og:title" content="2시간 → 5분, AI 쇼츠 팩토리(VidFactory AI)로 수익 활동에 집중하세요">
+    <meta property="og:description" content="AI가 대본, 더빙, 편집, 썸네일을 5분 안에 완성! 시간 낭비 없이 수익형 쇼츠 영상을 대량 생산하세요.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vidfactoryai-29bfe.web.app"> <!-- 나중에 실제 도메인 주소로 변경해주세요 -->
+    <!-- og:image 태그는 이미지 URL이 있을 경우 여기에 추가하세요. -->
+
     <!-- Tailwind CSS CDN 로드 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -68,13 +83,18 @@
     <!-- Header / Navigation (Sticky Bar for Mobile CTA) -->
     <header class="sticky top-0 z-50 bg-[#0d1117] bg-opacity-95 shadow-lg backdrop-blur-sm p-4 border-b border-[#30363d]">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-white tracking-wider">VidFactory <span class="text-[#00f0ff]">AI</span></a>
+            <!-- Logo Image Added -->
+            <a href="#" class="flex items-center space-x-3">
+                <img src="./static/img/logo.jpg" alt="VidFactory AI 로고" class="h-8">
+                <span class="text-2xl font-bold text-white tracking-wider">VidFactory <span class="text-[#00f0ff]">AI</span></span>
+            </a>
             <!-- 모바일 헤더 CTA: 무료 체험 신청 링크 -->
-            <a href="https://forms.gle/VC3rMi9tSJaRwWk48" target="_blank" class="md:hidden cta-button bg-[#00f0ff] text-[#0d1117] font-semibold py-2 px-4 rounded-lg text-sm hover:bg-white transition duration-300">
+            <a href="https://forms.gle/Jfd21StsVNkFexpn8" target="_blank" class="md:hidden cta-button bg-[#00f0ff] text-[#0d1117] font-semibold py-2 px-4 rounded-lg text-sm hover:bg-white transition duration-300">
                 무료 체험 신청
             </a>
             <nav class="hidden md:flex space-x-6 text-sm">
                 <a href="#problem-solution" class="hover:text-[#00f0ff] transition duration-200">문제 해결</a>
+                <a href="#video-comparison" class="hover:text-[#00f0ff] transition duration-200">AI 비교</a>
                 <a href="#features" class="hover:text-[#00f0ff] transition duration-200">핵심 기능</a>
                 <a href="#pricing" class="hover:text-[#00f0ff] transition duration-200">가격 정책</a>
             </nav>
@@ -96,7 +116,7 @@
                     AI 쇼츠 팩토리(VidFactory AI)는 원본 영상을 순식간에 수백 개의 수익형 쇼츠 영상으로 자동 변환합니다.
                 </p>
                 <!-- CTA Button: 무료 체험 신청 링크 -->
-                <a href="https://forms.gle/VC3rMi9tSJaRwWk48" target="_blank" class="cta-button inline-block bg-[#00f0ff] text-[#0d1117] font-bold text-xl py-4 px-12 rounded-xl hover:bg-white transition duration-300 transform scale-105">
+                <a href="https://forms.gle/Jfd21StsVNkFexpn8" target="_blank" class="cta-button inline-block bg-[#00f0ff] text-[#0d1117] font-bold text-xl py-4 px-12 rounded-xl hover:bg-white transition duration-300 transform scale-105">
                     🚀 3일 무료 체험 라이선스 신청하기
                 </a>
                 <p class="text-sm text-gray-500 mt-4">3일간 영상 10개 제작 가능한 라이선스가 이메일로 발송됩니다.</p>
@@ -158,7 +178,59 @@
             </div>
         </section>
 
-        <!-- 3. How It Works Section (2-Step Process) -->
+        <!-- 2.5. Before & After Video Comparison Section (NEW: 전/후 동영상 비교 자리) -->
+        <section id="video-comparison" class="py-20 md:py-28 bg-[#0d1117] border-b border-[#161b22]">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center section-title mx-auto">
+                    AI가 만든 놀라운 변화: 편집 전후 비교
+                </h2>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <!-- Before Video (원본 영상) -->
+                    <div class="p-6 bg-[#161b22] rounded-xl border border-red-600/30 shadow-2xl text-center">
+                        <h3 class="text-2xl font-bold text-red-400 mb-4">
+                            원본 영상 (Before)
+                        </h3>
+                        <!-- Video Embedding Area -->
+                        <div class="w-full max-w-sm mx-auto bg-gray-900 rounded-lg h-[400px] relative overflow-hidden">
+                            <!-- YouTube Embed for Original Video: https://youtube.com/shorts/-NDgeRd_4fY?feature=share -->
+                            <iframe
+                                class="w-full h-full absolute inset-0"
+                                src="https://www.youtube.com/embed/-NDgeRd_4fY"
+                                title="원본 영상 - 편집 전"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin"
+                                allowfullscreen
+                            ></iframe>
+                        </div>
+                        <p class="mt-4 text-gray-500 text-sm">중국어 자막이 있거나, 편집되지 않은 긴 클립</p>
+                    </div>
+
+                    <!-- After Video (AI 자동 생성 쇼츠) -->
+                    <div class="p-6 bg-[#161b22] rounded-xl border border-[#00f0ff]/30 shadow-2xl text-center">
+                        <h3 class="text-2xl font-bold text-[#00f0ff] mb-4">
+                            AI 자동 생성 쇼츠 (After)
+                        </h3>
+                        <!-- Video Embedding Area -->
+                        <div class="w-full max-w-sm mx-auto bg-gray-900 rounded-lg h-[400px] relative overflow-hidden">
+                            <!-- YouTube Embed for Result Video: https://youtube.com/shorts/gxZrDlBwUqw?feature=share -->
+                            <iframe
+                                class="w-full h-full absolute inset-0"
+                                src="https://www.youtube.com/embed/gxZrDlBwUqw"
+                                title="AI 자동 생성 쇼츠 - 편집 후"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin"
+                                allowfullscreen
+                            ></iframe>
+                        </div>
+                        <p class="mt-4 text-gray-500 text-sm">후킹 대본, 더빙, 자막, 블러 처리가 완료된 수익형 쇼츠</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. How It Works Section -->
         <section id="how-it-works" class="py-20 md:py-28 bg-[#0d1117] border-b border-[#161b22]">
             <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
                 <h2 class="text-3xl md:text-4xl font-bold mb-16 section-title mx-auto">
@@ -282,7 +354,7 @@
                             <li class="flex items-center"><span class="text-[#00f0ff] mr-2">✓</span> 모든 AI 기능 포함</li>
                         </ul>
                         <!-- Pricing Free Trial CTA: 무료 체험 신청 링크 -->
-                        <a href="https://forms.gle/VC3rMi9tSJaRwWk48" target="_blank" class="w-full block text-center bg-gray-700 text-white font-bold py-3 rounded-lg text-lg hover:bg-gray-600 transition duration-300">
+                        <a href="https://forms.gle/Jfd21StsVNkFexpn8" target="_blank" class="w-full block text-center bg-gray-700 text-white font-bold py-3 rounded-lg text-lg hover:bg-gray-600 transition duration-300">
                             3일 무료 라이선스 신청
                         </a>
                         <p class="text-xs text-gray-500 mt-3 text-center">라이선스는 이메일로 즉시 발송됩니다.</p>
@@ -302,7 +374,7 @@
                             <li class="flex items-center"><span class="text-[#00f0ff] mr-2">✓</span> 배치 제작 가능</li>
                         </ul>
                         <!-- 크리에이터 월 구독 신청 링크 업데이트 -->
-                        <a href="https://forms.gle/TAWcCowDxgymyGAL6" target="_blank" class="w-full block text-center cta-button bg-[#00f0ff] text-[#0d1117] font-bold py-3 rounded-lg text-lg hover:bg-white transition duration-300">
+                        <a href="https://forms.gle/hJq65ssNvpkhgecE9" target="_blank" class="w-full block text-center cta-button bg-[#00f0ff] text-[#0d1117] font-bold py-3 rounded-lg text-lg hover:bg-white transition duration-300">
                             월 구독 신청하기
                         </a>
                     </div>
@@ -320,7 +392,7 @@
                             <li class="flex items-center"><span class="text-[#00f0ff] mr-2">✓</span> 하드웨어 가속 지원</li>
                         </ul>
                         <!-- 프로 월 구독 신청 링크 업데이트 -->
-                        <a href="https://forms.gle/TAWcCowDxgymyGAL6" target="_blank" class="w-full block text-center bg-gray-700 text-white font-bold py-3 rounded-lg text-lg hover:bg-gray-600 transition duration-300">
+                        <a href="https://forms.gle/km9QA8GnAn5VkYvK6" target="_blank" class="w-full block text-center bg-gray-700 text-white font-bold py-3 rounded-lg text-lg hover:bg-gray-600 transition duration-300">
                             월 구독 신청하기
                         </a>
                     </div>
@@ -339,7 +411,7 @@
                     2시간의 고통스러운 편집은 이제 과거입니다. 단 5분 만에 완성되는 수익형 쇼츠를 경험하고 당신의 시간을 되찾으세요.
                 </p>
                 <!-- Final CTA Button: 무료 라이선스 신청 링크 -->
-                <a href="https://forms.gle/VC3rMi9tSJaRwWk48" target="_blank" class="cta-button inline-block bg-[#00f0ff] text-[#0d1117] font-bold text-xl py-4 px-12 rounded-xl hover:bg-white transition duration-300 transform scale-105">
+                <a href="https://forms.gle/Jfd21StsVNkFexpn8" target="_blank" class="cta-button inline-block bg-[#00f0ff] text-[#0d1117] font-bold text-xl py-4 px-12 rounded-xl hover:bg-white transition duration-300 transform scale-105">
                     ✨ 지금 바로 무료 라이선스 신청하기
                 </a>
             </div>
