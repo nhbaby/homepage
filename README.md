@@ -23,3 +23,5 @@ https://nhbaby.github.io/homepage/shorts_invitation.html
 - 배포 : firebase deploy --only hosting
 
 url : https://vidfactoryai-29bfe.web.app/
+domain : https://vidfactory-ai.com
+domain : https://shorts.vidfactory-ai.com
