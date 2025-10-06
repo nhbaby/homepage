@@ -5,14 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI 쇼츠 팩토리 (VidFactory AI) - 자주 묻는 질문 (FAQ)</title>
     <style>
+        /* Inter 폰트 설정 (랜딩 페이지와 통일) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         body {
-            font-family: 'Spoqa Han Sans Neo', sans-serif;
+            font-family: 'Inter', sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 0;
             background-color: #f4f7f6;
             color: #333;
+            /* 고정 헤더를 위한 여백 */
+            padding-top: 70px;
         }
+        /* Tailwind CSS 스타일링을 위한 헬퍼 클래스 (실제 Tailwind CDN은 index.html에 있을 것으로 가정하고 CSS를 직접 작성) */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #161b22; /* index.html의 footer/section 배경색과 유사하게 */
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 60px;
+        }
+        .logo a {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00f0ff; /* 강조 색상 */
+            text-decoration: none;
+        }
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 8px 15px;
+            margin-left: 10px;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+        .nav-links a:hover {
+            background-color: #21262d;
+        }
+        .nav-links .active-link {
+            color: #00f0ff; /* 현재 페이지 링크 강조 */
+            font-weight: 700;
+            background-color: #21262d;
+        }
+
         .container {
             width: 90%;
             max-width: 1000px;
@@ -131,6 +177,23 @@
     </style>
 </head>
 <body>
+
+    <!-- 🌟 글로벌 고정 헤더 (Global Fixed Header) 추가 🌟 -->
+    <header class="fixed-header">
+        <div class="header-content">
+            <!-- 로고: 홈페이지(index.html)로 연결 -->
+            <div class="logo">
+                <a href="index.html">VidFactory AI</a>
+            </div>
+            <!-- 내비게이션 링크 -->
+            <nav class="nav-links">
+                <a href="index.html">🏠 홈</a>
+                <!-- 현재 페이지 (사용설명서)를 active-link로 강조 -->
+                <a href="manual.html" class="active-link">📚 사용설명서</a>
+                <a href="faq.html">❓ FAQ</a>
+            </nav>
+        </div>
+    </header>
 
     <div class="container">
 
