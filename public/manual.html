@@ -5,14 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI 쇼츠 팩토리 (VidFactory AI) - 쉽고 빠른 쇼츠 영상 제작</title>
     <style>
+        /* Inter 폰트 설정 (랜딩 페이지와 통일) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         body {
-            font-family: 'Spoqa Han Sans Neo', sans-serif;
+            font-family: 'Inter', sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 0;
             background-color: #f4f7f6;
             color: #333;
+            /* 고정 헤더를 위한 여백 */
+            padding-top: 70px;
         }
+        /* Tailwind CSS 스타일링을 위한 헬퍼 클래스 (실제 Tailwind CDN은 index.html에 있을 것으로 가정하고 CSS를 직접 작성) */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #161b22; /* index.html의 footer/section 배경색과 유사하게 */
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 60px;
+        }
+        .logo a {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00f0ff; /* 강조 색상 */
+            text-decoration: none;
+        }
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 8px 15px;
+            margin-left: 10px;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+        .nav-links a:hover {
+            background-color: #21262d;
+        }
+        .nav-links .active-link {
+            color: #00f0ff; /* 현재 페이지 링크 강조 */
+            font-weight: 700;
+            background-color: #21262d;
+        }
+
+
+
         .container {
             width: 90%;
             max-width: 1000px;
@@ -100,13 +148,26 @@
             color: #777;
             margin-bottom: 30px;
         }
-
-        /* 스포카 한 산스 네오 폰트 임시 로딩 (실제 적용 시에는 CDN 또는 파일 링크 사용) */
-        @import url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans-neo/assets/css/SpoqaHanSansNeo.css');
-
     </style>
 </head>
 <body>
+
+    <!-- 🌟 글로벌 고정 헤더 (Global Fixed Header) 추가 🌟 -->
+    <header class="fixed-header">
+        <div class="header-content">
+            <!-- 로고: 홈페이지(index.html)로 연결 -->
+            <div class="logo">
+                <a href="index.html">VidFactory AI</a>
+            </div>
+            <!-- 내비게이션 링크 -->
+            <nav class="nav-links">
+                <a href="index.html">🏠 홈</a>
+                <!-- 현재 페이지 (사용설명서)를 active-link로 강조 -->
+                <a href="manual.html" class="active-link">📚 사용설명서</a>
+                <a href="faq.html">❓ FAQ</a>
+            </nav>
+        </div>
+    </header>
 
     <div class="container">
 
@@ -150,10 +211,12 @@
                 <li>
                     <strong>(최초 실행) 라이선스 키 입력 🔑:</strong>
                     프로그램을 처음 사용하시거나 라이선스가 만료된 경우, '라이선스 키 입력' 창이 자동으로 뜹니다. 받으신 라이선스 키를 정확히 입력하고 [확인]을 누르면 됩니다. 유효한 키는 만료일과 함께 확인 메시지를 보여주며, 컴퓨터에 안전하게 저장됩니다.
+                    <p class="tip"><strong>팁:</strong> 라이선스 키는 오타 방지를 위해 반드시 복사(Ctrl+C)하여 붙여넣기(Ctrl+V) 하세요.</p>
                 </li>
                 <li>
                     <strong>(최초 실행) Google Gemini API 키 입력 🤖:</strong>
                     라이선스 키 입력 후, Google Gemini API 키가 설정되어 있지 않으면 'Google Gemini API 키 입력' 창이 나타납니다. AI 대본 및 홍보 문구 생성에 꼭 필요한 키이니, Google Cloud Console에서 발급받은 API 키를 입력하고 [저장] 버튼을 누릅니다.
+                    <p class="warning"><strong>주의:</strong> API 키는 외부에 노출되거나 유출되지 않도록 주의해야 합니다.</p>
                 </li>
                 <li>
                     <strong>메인 제어판 표시:</strong>
@@ -217,7 +280,7 @@
                     </li>
                     <li>
                         <strong>구매방법 (SNS 홍보 게시물에 사용)</strong>
-                        영상 등록시 필요한 소개문구 입니다. 구매 유도를 하기 위한 상품번호와 댓글 입력 유도하는 멘트를 적어주세요.
+                        이 정보는 AI가 생성한 **SNS 홍보 게시물(댓글 유도, 상품 번호 포함)**에 자동으로 삽입됩니다. 구매 유도를 위한 상품 정보 및 유도 멘트를 적어주세요.
                     </li>
                     <li>
                         <strong>장면 전환 민감도 🎬(선택 사항)</strong>
@@ -286,7 +349,7 @@
         <div class="section">
             <h2>✅ 배치 현황 페이지</h2>
             <p>
-                '배치 시작' 버튼을 누르면 결과 확인 페이지로 이동합니다. 여기서 AI가 만든 결과물을 확인하고 다운로드할 수 있습니다.
+                '배치 시작' 버튼을 누르면 배치 현황 페이지로 이동하며, 대량 영상 제작의 효율을 극대화할 수 있습니다.
             </p>
             <ul>
                 <li>

@@ -31,6 +31,24 @@
             line-height: 1.6;
             scroll-behavior: smooth;
         }
+        .text-neon {
+            color: #00f0ff; /* Neon Cyan */
+        }
+        .cta-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+        }
+        .cta-button:hover {
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.7);
+        }
+        /* 추가적인 CSS 애니메이션 (필요시) */
+        @keyframes pulse-neon {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.03); opacity: 0.9; }
+        }
+        .animate-pulse-neon {
+            animation: pulse-neon 2s infinite ease-in-out;
+        }
         .section-title {
             position: relative;
             display: inline-block;
@@ -97,27 +115,29 @@
                 <a href="#video-comparison" class="hover:text-[#00f0ff] transition duration-200">AI 비교</a>
                 <a href="#features" class="hover:text-[#00f0ff] transition duration-200">핵심 기능</a>
                 <a href="#pricing" class="hover:text-[#00f0ff] transition duration-200">가격 정책</a>
+                <a href="./manual.html" class="hover:text-[#00f0ff] transition duration-200">사용 설명서</a>
+                <a href="./faq.html" class="hover:text-[#00f0ff] transition duration-200">FAQ</a>
             </nav>
+            <a href="https://forms.gle/Jfd21StsVNkFexpn8" target="_blank" class="hidden md:block bg-[#00f0ff] text-[#0d1117] font-bold py-2 px-6 rounded-lg hover:bg-white transition duration-300">
+                무료 라이선스 신청
+            </a>
         </div>
     </header>
 
     <main>
         <!-- 1. Hero Section -->
         <section id="hero" class="py-24 md:py-36 text-center bg-[#0d1117] border-b border-[#161b22]">
-            <div class="max-w-4xl mx-auto px-6">
+            <div class="max-w-7xl mx-auto px-6 md:px-8 relative z-10 text-center">
                 <!-- A 옵션 헤드라인 적용 -->
-                <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-                    편집 시간 <span class="hero-gradient-text">2시간 &rarr; 5분.</span>
+                <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold mb-6 tracking-tighter">
+                    2시간 편집을 <span class="text-neon block mt-2">단 5분으로 단축</span>하는 AI 솔루션
                 </h1>
-                <p class="text-2xl md:text-3xl text-gray-300 mb-8 font-medium">
-                    이제 AI가 대신 만들고, 당신은 <span class="font-bold text-[#00f0ff]">'수익 활동'</span>에만 집중하세요.
-                </p>
-                <p class="text-lg text-gray-400 mb-10 max-w-2xl mx-auto">
-                    AI 쇼츠 팩토리(VidFactory AI)는 원본 영상을 순식간에 수백 개의 수익형 쇼츠 영상으로 자동 변환합니다.
+                <p class="text-lg md:text-2xl text-gray-400 max-w-4xl mx-auto mb-10">
+                    <span class="text-neon font-bold">VidFactory AI</span>는 긴 영상을 분석하여 수익형 쇼츠를 대본, 더빙, 편집까지 모두 자동으로 완성해 줍니다. 시간 낭비 없이 당신의 수익 활동에만 집중하세요.
                 </p>
                 <!-- CTA Button: 무료 체험 신청 링크 -->
-                <a href="https://forms.gle/Jfd21StsVNkFexpn8" target="_blank" class="cta-button inline-block bg-[#00f0ff] text-[#0d1117] font-bold text-xl py-4 px-12 rounded-xl hover:bg-white transition duration-300 transform scale-105">
-                    🚀 3일 무료 체험 라이선스 신청하기
+                <a href="https://forms.gle/Jfd21StsVNkFexpn8" target="_blank" class="cta-button inline-block bg-[#00f0ff] text-[#0d1117] font-bold text-xl md:text-2xl py-4 px-10 md:px-16 rounded-xl hover:bg-white transition duration-300 transform scale-105 animate-pulse-neon">
+                    ✨ 지금 바로 무료 라이선스 신청하기
                 </a>
                 <p class="text-sm text-gray-500 mt-4">3일간 영상 10개 제작 가능한 라이선스가 이메일로 발송됩니다.</p>
             </div>
