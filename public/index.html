@@ -8,6 +8,9 @@
     <!-- Favicon Link Added -->
     <link rel="icon" href="./static/img/favicon.ico" type="image/x-icon">
 
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <!-- 🌟 Google SEO 최적화를 위한 메타 태그 추가 🌟 -->
     <meta name="description" content="2시간 걸리던 쇼츠 편집을 단 5분 만에 AI가 자동 완성합니다. 대본, 더빙, 썸네일 제작까지 한번에 처리하여 당신의 수익 활동에만 집중할 수 있게 돕는 혁신적인 AI 동영상 제작 프로그램입니다.">
     <meta name="keywords" content="AI 쇼츠 제작, AI 동영상 편집, 쇼츠 자동 생성, 수익형 쇼츠, 릴스 제작, 유튜브 쇼츠, VidFactory AI">
@@ -464,12 +467,61 @@
     <!-- Footer -->
     <footer class="bg-[#161b22] py-8 border-t border-[#30363d]">
         <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center text-sm text-gray-500">
+            <!-- 🌟 유튜브 채널 링크 추가 -->
+            <div class="mb-6">
+                <p class="text-white text-lg font-semibold mb-3">AI 쇼츠 팩토리 공식 채널</p>
+                <!-- target="_blank"로 새 탭에서 열리도록 설정 -->
+                <a href="https://www.youtube.com/@aiVidFactory" target="_blank" class="inline-block text-white hover:text-[#00f0ff] transition duration-300">
+                    <!-- YouTube 아이콘 (Lucide Icons) -->
+                    <i data-lucide="youtube" class="w-8 h-8 mx-auto"></i>
+                </a>
+            </div>
+
             <p>&copy; 2025 VidFactory AI. All rights reserved.</p>
             <div class="mt-2 space-x-4">
                 <span class="text-gray-400">문의: vidfactoryai@gmail.com</span>
             </div>
         </div>
     </footer>
+    <script>
+        lucide.createIcons();
 
+        // 내비게이션 스크롤 동작 설정
+        document.querySelectorAll('.nav-links a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 현재 스크롤 위치에 따른 active-link 업데이트 (선택 사항)
+        const sections = document.querySelectorAll('main section');
+        const navLinks = document.querySelectorAll('.nav-links a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 70) { // 70px는 헤더 높이 감안
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(a => {
+                a.classList.remove('active-link');
+                if (a.getAttribute('href').includes(current) && current) {
+                    a.classList.add('active-link');
+                } else if (current === 'hero-section' && a.getAttribute('href').includes('hero-section')) {
+                     a.classList.add('active-link');
+                }
+                // '홈' 링크는 #hero-section 또는 #cta-section을 포함하지 않으므로 예외 처리
+                if (window.scrollY < 100 && a.textContent.includes('홈')) {
+                     a.classList.add('active-link');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
